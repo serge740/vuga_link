@@ -422,51 +422,108 @@
                                         <h2>Send Us a Message</h2>
                                         <p>Tell us about your language service needs. Whether you need interpretation, translation, or have questions, we'll get back to you within 2 hours.</p>
                                     </div>
-                                    <form action="#" method="post" id="contact-form">
+                                    <form action="https://formspree.io/f/mvgbjkqe" method="POST" id="contact-form" autocomplete="off">
                                         <div class="row">
-                                            <div class="col-md-6">
-                                                <div class="form-group">
-                                                    <input type="text" class="form-control" name="name" placeholder="Your Full Name" required="">
-                                                </div>
+                                          <div class="col-md-6">
+                                            <div class="form-group">
+                                              <input type="text" class="form-control" name="name" placeholder="Your Full Name" required>
                                             </div>
-                                            <div class="col-md-6">
-                                                <div class="form-group">
-                                                    <input type="email" class="form-control" name="email" placeholder="Your Email Address" required="">
-                                                </div>
+                                          </div>
+                                          <div class="col-md-6">
+                                            <div class="form-group">
+                                              <input type="email" class="form-control" name="email" placeholder="Your Email Address" required>
                                             </div>
+                                          </div>
                                         </div>
+                                      
                                         <div class="row">
-                                            <div class="col-md-6">
-                                                <div class="form-group">
-                                                    <input type="tel" class="form-control" name="phone" placeholder="Your Phone Number">
-                                                </div>
+                                          <div class="col-md-6">
+                                            <div class="form-group">
+                                              <input type="tel" class="form-control" name="phone" placeholder="Your Phone Number">
                                             </div>
-                                            <div class="col-md-6">
-                                                <div class="form-group">
-                                                    <select class="form-control" name="service_type">
-                                                        <option value="">Select Service Type</option>
-                                                        <option value="virtual-interpretation">Virtual Interpretation</option>
-                                                        <option value="onsite-interpretation">On-Site Interpretation</option>
-                                                        <option value="document-translation">Document Translation</option>
-                                                        <option value="transcription">Transcription Services</option>
-                                                        <option value="data-input">Data Input & Typing</option>
-                                                        <option value="consultation">Language Consultation</option>
-                                                        <option value="other">Other</option>
-                                                    </select>
-                                                </div>
+                                          </div>
+                                          <div class="col-md-6">
+                                            <div class="form-group">
+                                              <select class="form-control" name="service_type">
+                                                <option value="">Select Service Type</option>
+                                                <option value="virtual-interpretation">Virtual Interpretation</option>
+                                                <option value="onsite-interpretation">On-Site Interpretation</option>
+                                                <option value="document-translation">Document Translation</option>
+                                                <option value="transcription">Transcription Services</option>
+                                                <option value="data-input">Data Input & Typing</option>
+                                                <option value="consultation">Language Consultation</option>
+                                                <option value="other">Other</option>
+                                              </select>
                                             </div>
+                                          </div>
                                         </div>
+                                      
                                         <div class="form-group">
-                                            <input type="text" class="form-control" name="subject" placeholder="Subject / Urgency Level" required="">
+                                          <input type="text" class="form-control" name="subject" placeholder="Subject / Urgency Level" required>
                                         </div>
+                                      
                                         <div class="form-group">
-                                            <textarea name="message" cols="30" rows="6" class="form-control" placeholder="Tell us about your project, preferred languages, timeline, and any specific requirements..." required=""></textarea>
+                                          <textarea name="message" cols="30" rows="6" class="form-control" placeholder="Tell us about your project, preferred languages, timeline, and any specific requirements..." required></textarea>
                                         </div>
-                                        <button type="submit" class="contact-btn"> <i class="far fa-paper-plane"></i> Send Message</button>
+                                      
+                                        <button type="submit" class="contact-btn" id="submit-btn">
+                                          <span id="submit-text"><i class="far fa-paper-plane"></i> Send Message</span>
+                                          <span id="submit-spinner" class="spinner-border spinner-border-sm d-none" role="status" aria-hidden="true"></span>
+                                        </button>
+                                      
                                         <div class="col-md-12 mt-3">
-                                            <div class="form-messege text-success"></div>
+                                          <div class="form-messege text-success"></div>
                                         </div>
-                                    </form>
+                                      </form>
+                                      
+                                      <script>
+                                      document.addEventListener("DOMContentLoaded", function () {
+                                        const form = document.getElementById("contact-form");
+                                        const messageBox = document.querySelector(".form-messege");
+                                        const submitBtn = document.getElementById("submit-btn");
+                                        const submitText = document.getElementById("submit-text");
+                                        const submitSpinner = document.getElementById("submit-spinner");
+                                      
+                                        form.addEventListener("submit", async function (e) {
+                                          e.preventDefault();
+                                      
+                                          // UI: show spinner
+                                          submitText.classList.add("d-none");
+                                          submitSpinner.classList.remove("d-none");
+                                          messageBox.textContent = "";
+                                      
+                                          const data = new FormData(form);
+                                      
+                                          try {
+                                            const response = await fetch(form.action, {
+                                              method: "POST",
+                                              body: data,
+                                              headers: { Accept: "application/json" },
+                                            });
+                                      
+                                            if (response.ok) {
+                                              form.reset();
+                                              messageBox.classList.remove("text-danger");
+                                              messageBox.classList.add("text-success");
+                                              messageBox.textContent = "✅ Thank you! Your message has been sent successfully.";
+                                            } else {
+                                              messageBox.classList.remove("text-success");
+                                              messageBox.classList.add("text-danger");
+                                              messageBox.textContent = "❌ Oops! Something went wrong. Please try again.";
+                                            }
+                                          } catch (error) {
+                                            messageBox.classList.remove("text-success");
+                                            messageBox.classList.add("text-danger");
+                                            messageBox.textContent = "⚠️ Network error. Please check your connection and try again.";
+                                          } finally {
+                                            // Reset button state
+                                            submitText.classList.remove("d-none");
+                                            submitSpinner.classList.add("d-none");
+                                          }
+                                        });
+                                      });
+                                      </script>
+                                      
                                 </div>
                             </div>
                         </div>
