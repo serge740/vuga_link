@@ -1,6 +1,4 @@
-# Remove .html or .htm extensions
-/:path.html   /:path   301
-/:path.htm    /:path   301
-
-# Redirect index.htm to root
-/index.htm    /   301
+/index.html    /       301
+/index.htm     /       301
+/*.html        /:splat  301
+/*.htm         /:splat  301
